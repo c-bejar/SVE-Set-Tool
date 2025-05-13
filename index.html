@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+  </head>
+  <body>
+    <form>
+      <label for="param">Parameter</label>
+      <input id="param" />
+    </form>
+    <script>
+      (function () {
+        const queryString = document.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        const ref = urlParams.get("ref");
+        document.getElementById("param").value = ref;
+      })();
+    </script>
+  </body>
+</html>
