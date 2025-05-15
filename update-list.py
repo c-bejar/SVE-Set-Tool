@@ -3,12 +3,12 @@ import requests
 from bs4 import BeautifulSoup as bs
 
 BASE_URL = "https://en.shadowverse-evolve.com"
-FILTER_URL = "/cards/searchresults/?&view=text&sort=new&page="
-page = 1
-url = BASE_URL + FILTER_URL + str(page)
+FILTER = "/cards/searchresults/?&view=text&sort=new&page="
+current_page = 1
+url = BASE_URL + FILTER + str(current_page)
 
 def main():
-    global url, page
+    global url, current_page
 
     response = requests.get(url)
     max_page = find_max_page(response)
@@ -27,9 +27,9 @@ def main():
             print()
 
         #---------------------------
-        page += 1
-        if page > 1: break
-        url = BASE_URL + FILTER_URL + str(page)
+        current_page += 1
+        if current_page > 1: break
+        url = BASE_URL + FILTER + str(current_page)
         response = requests.get(url)
 
 def find_max_page(response):
@@ -39,7 +39,7 @@ def find_max_page(response):
 
     if match:
         max_page = int(match.group(1))
-        print(f"found max_page: {max_page}")
+        print(f"found max_page: {max_page}\n")
         return max_page
     else:
         print("No max_page found")
