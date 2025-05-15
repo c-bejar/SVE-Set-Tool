@@ -1,3 +1,4 @@
+import os
 import re
 import requests
 from bs4 import BeautifulSoup as bs
@@ -13,6 +14,7 @@ def main():
     response = requests.get(url)
     max_page = find_max_page(response)
 
+    finishExecution = False
     while True:
         soup = bs(response.text, 'html.parser')
         cards = soup.find('ul', class_='cardlist-Result_List')
@@ -24,13 +26,39 @@ def main():
 
             image = cards.find('img', src=re.compile(numbers[i].text))
             print(f"Image URL: {BASE_URL + image['src']}")
-            print()
+
+            if download_image(BASE_URL + image['src'], 
+                              f"{names[i].text} [{numbers[i].text}]") != -1:
+                add_to_list(numbers[i].text)
 
         #---------------------------
         current_page += 1
-        if current_page > 1: break
+        if current_page > max_page: break
         url = BASE_URL + FILTER + str(current_page)
         response = requests.get(url)
+
+def add_to_list(set):
+    with open("cardlist.txt", 'r') as f:
+        existing_lines = f.readlines()
+
+        if set + '\n' not in existing_lines:
+            with open("cardlist.txt", 'a')as w:
+                w.write(set + '\n')
+        
+
+
+def download_image(url, filename):
+    if os.path.exists(f"Cards/{filename}.png"):
+        print(f"File {filename}.png already exists. Stopping Execution...")
+        return -1
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open(f"Cards/{filename}.png", 'wb') as f:
+            f.write(response.content)
+        print("Image saved successfully")
+    else:
+        print(f"Failed to download image. Status code: {response.status_code}")
+    return 1
 
 def find_max_page(response):
     soup = bs(response.text, 'html.parser')
