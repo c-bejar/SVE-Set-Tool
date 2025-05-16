@@ -3,10 +3,9 @@ import json
 import requests
 from bs4 import BeautifulSoup as bs
 
-#TODO: ADD SUPPORT FOR UNIVERSE CARDS
-
 BASE_URL = "https://en.shadowverse-evolve.com"
 FILTER = "/cards/searchresults/?&view=text&sort=new&page="
+# FILTER = "/cards/searchresults/?title=Umamusume%3A+Pretty+Derby&view=text&page="
 current_page = 1
 url = BASE_URL + FILTER + str(current_page)
 
@@ -27,15 +26,14 @@ def main():
         hps = cards.find_all('span', class_='status-Item-Hp') # Card Defense
         abilities = cards.find_all('div', class_='detail') # Card Abilities
         info = cards.find_all('a') # link to expanded info on card | To find Class Type
-        
         for i in range(len(names)):
             image = cards.find('img', src=re.compile(sets[i].text))
             card_info = get_card_info(info[i]['href'])
-            print(get_card_ability(abilities[i]))
             card_data = {
                 "name": names[i].text,
                 "format": card_info['format'],
                 "class": card_info['class'],
+                "universe": card_info['universe'],
                 "type": types[i].find('span').text,
                 "set": card_info['set'],
                 "cost": costs[i].text[4:],
@@ -74,13 +72,25 @@ def get_card_info(filter):
 
     card_format = div_info[0].text[7:-1]
     card_class = div_info[1].text[5:]
-    card_set = div_info[5].text[8:]
-    card_illustrator = card_info.find_all('span', class_='heading')[-1].text
+    card_set = div_info[-1].text[8:]
+    card_number = card_info.find('span', class_='name')
+    if card_number == None: # Sometimes illustrator not listed
+        card_illustrator = ""
+    else:
+        card_illustrator = card_info.find_all('span', class_='heading')[-1].text
+    card_universe = div_info[2].text
+    if "Universe" not in card_universe[:8]:
+        card_universe = ""
+    else:
+        card_universe = card_universe[8:]
 
-    return {"format": card_format,
+    return {
+            "format": card_format,
             "class": card_class,
             "set": card_set,
-            "illustrator": card_illustrator}
+            "illustrator": card_illustrator,
+            "universe": card_universe
+            }
 
 # Find max pages within html | Site doesn't use traditional pages; uses scroll to reveal
 def find_max_page(response):
