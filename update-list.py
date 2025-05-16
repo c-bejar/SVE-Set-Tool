@@ -1,7 +1,9 @@
-import os
 import re
+import json
 import requests
 from bs4 import BeautifulSoup as bs
+
+#TODO: ADD SUPPORT FOR UNIVERSE CARDS
 
 BASE_URL = "https://en.shadowverse-evolve.com"
 FILTER = "/cards/searchresults/?&view=text&sort=new&page="
@@ -12,54 +14,75 @@ def main():
     global url, current_page
 
     response = requests.get(url)
-    max_page = find_max_page(response)
+    # max_page = find_max_page(response)
 
-    finishExecution = False
     while True:
-        soup = bs(response.text, 'html.parser')
-        cards = soup.find('ul', class_='cardlist-Result_List')
-        numbers = cards.find_all('p', class_='number')
-        names = cards.find_all('p', class_='ttl')
+        soup = bs(response.text, 'html.parser') # all html
+        cards = soup.find('ul', class_='cardlist-Result_List') # ul of all cards in page
+        sets = cards.find_all('p', class_='number') # Card Set
+        names = cards.find_all('p', class_='ttl') # Card Name
+        types = cards.find_all('div', class_='status') # Card Type
+        costs = cards.find_all('span', class_='status-Item-Cost') # Card Cost
+        powers = cards.find_all('span', class_='status-Item-Power') # Card Attack
+        hps = cards.find_all('span', class_='status-Item-Hp') # Card Defense
+        abilities = cards.find_all('div', class_='detail') # Card Abilities
+        info = cards.find_all('a') # link to expanded info on card | To find Class Type
+        
         for i in range(len(names)):
-            print(f"Card Name: {names[i].text}")
-            print(f"Card Set: {numbers[i].text}")
-
-            image = cards.find('img', src=re.compile(numbers[i].text))
-            print(f"Image URL: {BASE_URL + image['src']}")
-
-            if download_image(BASE_URL + image['src'], 
-                              f"{names[i].text} [{numbers[i].text}]") != -1:
-                add_to_list(numbers[i].text)
+            image = cards.find('img', src=re.compile(sets[i].text))
+            card_info = get_card_info(info[i]['href'])
+            print(get_card_ability(abilities[i]))
+            card_data = {
+                "name": names[i].text,
+                "format": card_info['format'],
+                "class": card_info['class'],
+                "type": types[i].find('span').text,
+                "set": card_info['set'],
+                "cost": costs[i].text[4:],
+                "attack": powers[i].text[6:],
+                "defense": hps[i].text[7:],
+                "ability": get_card_ability(abilities[i]),
+                "illustrator": card_info['illustrator'],
+                "set_number": sets[i].text,
+                "image_url": BASE_URL + image['src']
+            }
+            break
+            
 
         #---------------------------
         current_page += 1
-        if current_page > max_page: break
+        if current_page > 1: break
         url = BASE_URL + FILTER + str(current_page)
         response = requests.get(url)
 
-def add_to_list(set):
-    with open("cardlist.txt", 'r') as f:
-        existing_lines = f.readlines()
+def get_card_ability(ability):
+    text = re.sub(r'<img[^>]*>', 
+                  lambda m: m.group()
+                  .split('alt="')[1]
+                  .split('"')[0],
+                  str(ability))
+    text = re.sub(r'<[^>]*>', '', text)
 
-        if set + '\n' not in existing_lines:
-            with open("cardlist.txt", 'a')as w:
-                w.write(set + '\n')
-        
+    return text[1:-1]
 
+# Get card format, class, card set, and illustrator from card url
+def get_card_info(filter):
+    response = requests.get(BASE_URL + filter)
+    soup = bs(response.text, 'html.parser')
+    card_info = soup.find('div', class_='txt-Inner')
+    div_info = card_info.find_all('dl')
 
-def download_image(url, filename):
-    if os.path.exists(f"Cards/{filename}.png"):
-        print(f"File {filename}.png already exists. Stopping Execution...")
-        return -1
-    response = requests.get(url)
-    if response.status_code == 200:
-        with open(f"Cards/{filename}.png", 'wb') as f:
-            f.write(response.content)
-        print("Image saved successfully")
-    else:
-        print(f"Failed to download image. Status code: {response.status_code}")
-    return 1
+    card_format = div_info[0].text[7:-1]
+    card_class = div_info[1].text[5:]
+    card_set = div_info[5].text[8:]
+    card_illustrator = card_info.find_all('span', class_='heading')[-1].text
 
+    return {"format": card_format,
+            "class": card_class,
+            "set": card_set,
+            "illustrator": card_illustrator}
+
+# Find max pages within html | Site doesn't use traditional pages; uses scroll to reveal
 def find_max_page(response):
     soup = bs(response.text, 'html.parser')
     pattern = r'var\smax_page\s*=\s*(\d+)*;'
