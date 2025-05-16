@@ -5,28 +5,35 @@ from bs4 import BeautifulSoup as bs
 
 BASE_URL = "https://en.shadowverse-evolve.com"
 FILTER = "/cards/searchresults/?&view=text&sort=new&page="
-# FILTER = "/cards/searchresults/?title=Umamusume%3A+Pretty+Derby&view=text&page="
 current_page = 1
 url = BASE_URL + FILTER + str(current_page)
 
 def main():
     global url, current_page
 
+    with open("cards.json", 'r') as f:
+        old_cards = json.load(f)
+    card_list = []
+
     response = requests.get(url)
-    # max_page = find_max_page(response)
+    max_page = find_max_page(response)
 
     while True:
         soup = bs(response.text, 'html.parser') # all html
         cards = soup.find('ul', class_='cardlist-Result_List') # ul of all cards in page
+        
         sets = cards.find_all('p', class_='number') # Card Set
         names = cards.find_all('p', class_='ttl') # Card Name
         types = cards.find_all('div', class_='status') # Card Type
         costs = cards.find_all('span', class_='status-Item-Cost') # Card Cost
         powers = cards.find_all('span', class_='status-Item-Power') # Card Attack
         hps = cards.find_all('span', class_='status-Item-Hp') # Card Defense
-        abilities = cards.find_all('div', class_='detail') # Card Abilities
+        abilities = cards.find_all('div', class_='center-Txtarea') # Card Abilities
         info = cards.find_all('a') # link to expanded info on card | To find Class Type
+
         for i in range(len(names)):
+            print(f"Looking at {names[i].text} [{sets[i].text}]...")
+            
             image = cards.find('img', src=re.compile(sets[i].text))
             card_info = get_card_info(info[i]['href'])
             card_data = {
@@ -39,19 +46,39 @@ def main():
                 "cost": costs[i].text[4:],
                 "attack": powers[i].text[6:],
                 "defense": hps[i].text[7:],
-                "ability": get_card_ability(abilities[i]),
+                "ability": determine_if_ability(abilities, i),
                 "illustrator": card_info['illustrator'],
                 "set_number": sets[i].text,
                 "image_url": BASE_URL + image['src']
             }
-            break
+
+            if card_data in old_cards:
+                print("Found a repeat. Stopping...")
+                break
+            card_list.append(card_data)
             
 
         #---------------------------
+        print(f"Finished page {current_page} / {max_page}.")
         current_page += 1
-        if current_page > 1: break
+        if current_page > max_page: break
         url = BASE_URL + FILTER + str(current_page)
         response = requests.get(url)
+    
+    for data in card_list:
+        if data not in old_cards:
+            old_cards.append(data)
+
+    with open("cards.json", 'w') as f:
+        json.dump(old_cards, f, indent=4)
+
+def determine_if_ability(abilities, i):
+    list = abilities[i]
+    if list.find('div', class_='detail'):
+        ability = list.find('div', class_='detail')
+        return get_card_ability(ability)
+    else:
+        return ""
 
 def get_card_ability(ability):
     text = re.sub(r'<img[^>]*>', 
