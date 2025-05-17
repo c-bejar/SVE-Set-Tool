@@ -18,7 +18,10 @@ def main():
     response = requests.get(url)
     max_page = find_max_page(response)
 
+    found_duplicate = False
     while True:
+        if found_duplicate: break
+
         soup = bs(response.text, 'html.parser') # all html
         cards = soup.find('ul', class_='cardlist-Result_List') # ul of all cards in page
         
@@ -54,6 +57,7 @@ def main():
 
             if card_data in old_cards:
                 print("Found a repeat. Stopping...")
+                found_duplicate = True
                 break
             card_list.append(card_data)
             
@@ -67,7 +71,7 @@ def main():
     
     for data in card_list:
         if data not in old_cards:
-            old_cards.append(data)
+            old_cards.insert(0, data)
 
     with open("cards.json", 'w') as f:
         json.dump(old_cards, f, indent=4)
