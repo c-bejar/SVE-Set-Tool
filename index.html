@@ -5,20 +5,77 @@
     <title>Shadowverse Deck Creator</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Vast+Shadow&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="styles.css" />
     <script src="main.js" defer></script>
   </head>
   <body>
-    <table>
-      <tr>
-        <td>
-          <div class="card-container"></div>
-        </td>
-        <td class="info-container">
-          <div class="deck-container"></div>
-          <div class="card-filters"></div>
-        </td>
-      </tr>
-    </table>
+    <div class="card-container">
+      <!-- All cards go here -->
+    </div>
+    <div class="info-container">
+      <div class="deck-container"></div>
+      <div class="card-filters">
+        <label>Card Name: </label>
+        <input type="textbox" />
+        <label>Format: </label>
+        <select name="Format">
+          <option>All</option>
+          <option>Standard</option>
+          <option>Gloryfinder</option>
+        </select>
+        <label>Class: </label>
+        <select name="Class">
+          <option>All</option>
+          <option>Forestcraft</option>
+          <option>Swordcraft</option>
+          <option>Runecraft</option>
+          <option>Dragoncraft</option>
+          <option>Abysscraft</option>
+          <option>Havencraft</option>
+          <option>Neutral</option>
+        </select>
+        <label>Universe: </label>
+        <select name="Universe">
+          <option>Unspecified</option>
+          <option>Umamusume: Pretty Derby</option>
+          <option>THE IDOLM@STER CINDERELLA GIRLS</option>
+        </select>
+        <label>Card Set: </label>
+        <select name="Card Set">
+          <option>Unspecified</option>
+        </select>
+        <label>Cost: </label>
+        <select name="Cost">
+          <option>All</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8+</option>
+        </select>
+        <label>Card Type: </label>
+        <select name="Card Type">
+          <option>All</option>
+          <option>Follower</option>
+          <option>Evolved</option>
+          <option>Spell</option>
+          <option>Amulet</option>
+          <option>Token</option>
+          <option>Leader</option>
+          <option>Evolution Point</option>
+        </select>
+        <label>Keywords: </label>
+        <input type="textbox" />
+      </div>
+    </div>
   </body>
 </html>

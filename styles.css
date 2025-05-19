@@ -1,3 +1,31 @@
+label {
+  font-family: "Vast Shadow", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1vw;
+}
+
+select {
+  font-family: "Vast Shadow", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1vw;
+}
+
+option {
+  font-family: "Vast Shadow", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1vw;
+}
+
+input {
+  font-family: "Vast Shadow", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 1vw;
+}
+
 .card-container {
   position: fixed;
   inset: 0;
@@ -7,10 +35,18 @@
   overflow-y: auto;
 }
 
+.deck-container {
+  overflow-y: auto;
+}
+
 .card {
-  width: calc((50% - 2 * 0.5vh - 2 * 0.5vw) / 2.5);
-  height: auto;
+  width: calc((50% - 5 * 0.25vw) / 2.5);
   margin: 0.5vh 0.25vw;
+}
+
+.deck-card {
+  width: calc((50% - 10 * 0.15vw) / 5);
+  margin: 0.2vh 0.15vw;
 }
 
 .info-container {
@@ -26,4 +62,5 @@
 .card-filters {
   border: 1mm solid black;
   height: 20vh;
+  width: 48vw;
 }
