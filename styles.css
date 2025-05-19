@@ -35,17 +35,24 @@ input {
   overflow-y: auto;
 }
 
-.deck-container {
-  overflow-y: auto;
-}
-
 .card {
   width: calc((50% - 5 * 0.25vw) / 2.5);
   margin: 0.5vh 0.25vw;
 }
 
+.leader-card {
+  height: calc((45% - 1vh) / 0.5);
+  padding-left: 20%;
+  margin: 2vh 2vw;
+}
+
 .deck-card {
   width: calc((50% - 10 * 0.15vw) / 5);
+  margin: 0.2vh 0.15vw;
+}
+
+.evolve-card {
+  width: calc((50% - 5 * 0.15vw) / 2.5);
   margin: 0.2vh 0.15vw;
 }
 
@@ -57,6 +64,19 @@ input {
   border: 1mm solid black;
   height: 75vh;
   width: 48vw;
+  overflow-y: auto;
+}
+
+.deck-filter {
+  background-color: white;
+  border: 1mm solid black;
+  position: absolute;
+  z-index: 1;
+  width: 26vw;
+  height: 3%;
+  right: calc(25% - 13vw);
+  top: 71%;
+  padding: 1mm;
 }
 
 .card-filters {

@@ -19,7 +19,19 @@
       <!-- All cards go here -->
     </div>
     <div class="info-container">
-      <div class="deck-container"></div>
+      <div id="deckContainer" class="deck-container">
+        <div class="leader" style="display: inline"></div>
+        <div class="main" style="display: none"></div>
+        <div class="evolve" style="display: none"></div>
+      </div>
+      <div class="deck-filter">
+        <label for="leader">Leader</label>
+        <input type="radio" id="leader" name="deck" checked />
+        <label for="main">Main Deck</label>
+        <input type="radio" id="main" name="deck" />
+        <label for="evolve">Evolve Deck</label>
+        <input type="radio" id="evolve" name="deck" />
+      </div>
       <div class="card-filters">
         <label>Card Name: </label>
         <input type="textbox" />
@@ -41,14 +53,14 @@
           <option>Neutral</option>
         </select>
         <label>Universe: </label>
-        <select name="Universe">
+        <select id="universeContainer" name="Universe">
           <option>Unspecified</option>
-          <option>Umamusume: Pretty Derby</option>
-          <option>THE IDOLM@STER CINDERELLA GIRLS</option>
+          <!-- Universes are taken from script -->
         </select>
         <label>Card Set: </label>
-        <select name="Card Set">
+        <select id="setContainer" name="Card Set">
           <option>Unspecified</option>
+          <!-- Card Sets are taken from script -->
         </select>
         <label>Cost: </label>
         <select name="Cost">
