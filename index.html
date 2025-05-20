@@ -48,13 +48,9 @@
       </div>
       <div class="card-filters">
         <label>Card Name: </label>
-        <input name="card-name" type="textbox" />
-        <label>Format: </label>
-        <select name="Format">
-          <option>All</option>
-          <option>Standard</option>
-          <option>Gloryfinder</option>
-        </select>
+        <input name="card-name" type="textbox" autocomplete="off" />
+        <label>Keywords: </label>
+        <input name="keywords" type="textbox" autocomplete="off" />
         <label>Class: </label>
         <select name="Class">
           <option>All</option>
@@ -66,15 +62,20 @@
           <option>Havencraft</option>
           <option>Neutral</option>
         </select>
-        <label>Universe: </label>
-        <select id="universeContainer" name="Universe">
-          <option>Unspecified</option>
-          <!-- Universes are taken from script -->
+        <label>Card Type: </label>
+        <select name="Card Type">
+          <option>All</option>
+          <option>Follower</option>
+          <option>Evolved</option>
+          <option>Spell</option>
+          <option>Amulet</option>
+          <option>Leader</option>
         </select>
-        <label>Card Set: </label>
-        <select id="setContainer" name="Card Set">
-          <option>Unspecified</option>
-          <!-- Card Sets are taken from script -->
+        <label>Format: </label>
+        <select name="Format">
+          <option>All</option>
+          <option>Standard</option>
+          <option>Gloryfinder</option>
         </select>
         <label>Cost: </label>
         <select name="Cost">
@@ -88,17 +89,74 @@
           <option>7</option>
           <option>8+</option>
         </select>
-        <label>Card Type: </label>
-        <select name="Card Type">
-          <option>All</option>
-          <option>Follower</option>
-          <option>Evolved</option>
-          <option>Spell</option>
-          <option>Amulet</option>
-          <option>Leader</option>
+        <label>Attack: </label>
+        <select name="AttackFrom">
+          <option>Any</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10+</option>
         </select>
-        <label>Keywords: </label>
-        <input name="keywords" type="textbox" />
+        <label> ~ </label>
+        <select name="AttackTo">
+          <option>Any</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10+</option>
+        </select>
+        <label>Defense: </label>
+        <select name="DefenseFrom">
+          <option>Any</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10+</option>
+        </select>
+        <label> ~ </label>
+        <select name="DefenseTo">
+          <option>Any</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10+</option>
+        </select>
+        <br />
+        <label>Universe: </label>
+        <select id="universeContainer" name="Universe">
+          <option>Unspecified</option>
+          <!-- Universes are taken from script -->
+        </select>
+        <br />
+        <label>Card Set: </label>
+        <select id="setContainer" name="Card Set">
+          <option>Unspecified</option>
+          <!-- Card Sets are taken from script -->
+        </select>
       </div>
     </div>
   </body>

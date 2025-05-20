@@ -23,6 +23,10 @@ button {
   user-select: none;
 }
 
+input[type="textbox"] {
+  width: 15vw;
+}
+
 .card-container {
   position: fixed;
   inset: 0;
