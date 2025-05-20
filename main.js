@@ -12,26 +12,97 @@ function createCard(cardData, toDeck = 0) {
     cardElement.className = "card";
   }
   cardElement.loading = "lazy";
+  cardElement.draggable = false;
+  cardElement.dataset.cardInfo = JSON.stringify(cardData);
 
   return cardElement;
 }
 
-function createOption(setName) {
+function createOption(optionName) {
   const option = document.createElement("option");
-  option.text = setName;
+  option.text = optionName;
   return option;
 }
 
 function handleRadioClick(e) {
   const type = e.target.id;
-  console.log(mainContainer.children);
   Array.from(deckContainer.children).forEach((div) => {
     if (div.className == type) {
       div.style.display = "inline";
+      switch (type) {
+        case "leader":
+          cardTotal.textContent = "1";
+          cardCount.textContent = leaderContainer.children.length;
+          break;
+        case "main":
+          cardTotal.textContent = "50";
+          cardCount.textContent = mainContainer.children.length;
+          break;
+        case "evolve":
+          cardTotal.textContent = "10(20)";
+          cardCount.textContent = evolveContainer.children.length;
+          break;
+      }
     } else {
       div.style.display = "none";
     }
   });
+}
+
+function removeCard(data) {
+  data.srcElement.remove();
+  cardCount.textContent--;
+}
+
+function addCard(data) {
+  const currentView = document.querySelector('input[name="deck"]:checked');
+  const newCardData = JSON.parse(data.srcElement.dataset.cardInfo);
+  switch (currentView.id) {
+    case "leader":
+      if (newCardData.type != "Leader") {
+        return;
+      }
+      while (leaderContainer.firstChild) {
+        cardCount.textContent--;
+        leaderContainer.removeChild(leaderContainer.firstChild);
+      }
+      const leaderCard = createCard(newCardData, 2);
+      leaderContainer.appendChild(leaderCard);
+      leaderCard.addEventListener("click", removeCard);
+      break;
+    case "main":
+      if (newCardData.type == "Leader") {
+        return;
+      }
+      const mainCard = createCard(newCardData, 1);
+      mainContainer.appendChild(mainCard);
+      mainCard.addEventListener("click", removeCard);
+      break;
+    case "evolve":
+      if (!newCardData.type.includes("Evolve")) {
+        return;
+      }
+      const evolveCard = createCard(newCardData, 3);
+      evolveContainer.appendChild(evolveCard);
+      evolveCard.addEventListener("click", removeCard);
+      break;
+    default:
+      return;
+  }
+  cardCount.textContent++;
+}
+
+function getTotalCards(typeToReturn) {
+  switch (typeToReturn) {
+    case 1:
+      return leaderContainer.children.length;
+    case 2:
+      return mainContainer.children.length;
+    case 3:
+      return evolveContainer.children.length;
+    default:
+      return 0;
+  }
 }
 
 async function loadCards() {
@@ -57,21 +128,36 @@ let universes = new Set();
 document.querySelectorAll('input[type="radio"]').forEach((radio) => {
   radio.addEventListener("click", handleRadioClick);
 });
+document.addEventListener("mouseover", function (e) {
+  const element = document.elementFromPoint(e.clientX, e.clientY);
+  if (element.className == "card") {
+    const image = cardPreviewR.querySelector("img");
+    image.src = element.src;
+    image.className = "preview";
+    cardPreviewR.style.visibility = "visible";
+    cardPreviewL.style.visibility = "hidden";
+  } else if (["deck-card", "evolve-card"].includes(element.className)) {
+    const image = cardPreviewL.querySelector("img");
+    image.src = element.src;
+    image.className = "preview";
+    cardPreviewR.style.visibility = "hidden";
+    cardPreviewL.style.visibility = "visible";
+  } else {
+    cardPreviewR.style.visibility = "hidden";
+    cardPreviewL.style.visibility = "hidden";
+  }
+});
 
 loadedCards.then((cards) => {
-  cards.map((card, index) => {
+  cards.forEach((card) => {
     cardSets.add(card.set);
     universes.add(card.universe);
-    if (index < 1) {
-      leaderContainer.appendChild(createCard(card, 2));
+    if (card.type.includes("Token")) {
+      return;
     }
-    if (index < 10) {
-      evolveContainer.appendChild(createCard(card, 3));
-    }
-    if (index < 50) {
-      mainContainer.appendChild(createCard(card, 1));
-    }
-    cardContainer.appendChild(createCard(card));
+    const cardElement = createCard(card);
+    cardContainer.appendChild(cardElement);
+    cardElement.addEventListener("click", addCard);
   });
   universes.forEach((universe) => {
     if (universe == "") {

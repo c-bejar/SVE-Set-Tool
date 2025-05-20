@@ -15,6 +15,12 @@
     <script src="main.js" defer></script>
   </head>
   <body>
+    <div id="cardPreviewL" class="card-preview-left">
+      <img />
+    </div>
+    <div id="cardPreviewR" class="card-preview-right">
+      <img />
+    </div>
     <div class="card-container">
       <!-- All cards go here -->
     </div>
@@ -31,6 +37,11 @@
         <input type="radio" id="main" name="deck" />
         <label for="evolve">Evolve Deck</label>
         <input type="radio" id="evolve" name="deck" />
+      </div>
+      <div class="card-count">
+        <label id="cardCount">0</label>
+        <label> / </label>
+        <label id="cardTotal">1</label>
       </div>
       <div class="card-filters">
         <label>Card Name: </label>
@@ -81,9 +92,7 @@
           <option>Evolved</option>
           <option>Spell</option>
           <option>Amulet</option>
-          <option>Token</option>
           <option>Leader</option>
-          <option>Evolution Point</option>
         </select>
         <label>Keywords: </label>
         <input type="textbox" />

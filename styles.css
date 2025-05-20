@@ -1,29 +1,25 @@
-label {
-  font-family: "Vast Shadow", serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 1vw;
+body {
+  background-image: url(assets/background.jpg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #b4b4b4;
+  background-blend-mode: multiply;
 }
 
-select {
-  font-family: "Vast Shadow", serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 1vw;
+img {
+  user-select: none;
 }
 
-option {
-  font-family: "Vast Shadow", serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 1vw;
-}
-
+label,
+select,
+option,
 input {
   font-family: "Vast Shadow", serif;
   font-weight: 400;
   font-style: normal;
   font-size: 1vw;
+  user-select: none;
 }
 
 .card-container {
@@ -47,13 +43,31 @@ input {
 }
 
 .deck-card {
-  width: calc((50% - 10 * 0.15vw) / 5);
+  width: calc((50% - 11 * 0.15vw) / 5.5);
   margin: 0.2vh 0.15vw;
 }
 
 .evolve-card {
-  width: calc((50% - 5 * 0.15vw) / 2.5);
+  width: calc((50% - 7 * 0.15vw) / 3.5);
   margin: 0.2vh 0.15vw;
+}
+
+.card-preview-left,
+.card-preview-right {
+  position: absolute;
+  z-index: 3;
+}
+
+.card-preview-right {
+  right: 7vw;
+}
+
+.card-preview-left {
+  left: 7vw;
+}
+
+.preview {
+  height: 99vh;
 }
 
 .info-container {
@@ -79,7 +93,18 @@ input {
   padding: 1mm;
 }
 
+.card-count {
+  background-color: white;
+  padding: 1mm;
+  border: 1mm solid black;
+  position: absolute;
+  z-index: 1;
+  left: calc(89%);
+  top: 71.5%;
+}
+
 .card-filters {
+  background-color: white;
   border: 1mm solid black;
   height: 20vh;
   width: 48vw;
