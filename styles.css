@@ -27,6 +27,11 @@ input[type="textbox"] {
   width: 15vw;
 }
 
+input[type="radio"] {
+  width: 0.6em;
+  height: 0.6em;
+}
+
 .card-container {
   position: fixed;
   inset: 0;
