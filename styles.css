@@ -98,9 +98,21 @@ input[type="radio"] {
   z-index: 1;
 }
 
+.copy-tokens {
+  position: absolute;
+  bottom: 3.2vh;
+  right: 33.5vw;
+  z-index: 1;
+}
+
 button {
   width: 8vw;
   height: 4vh;
+}
+
+button#tokenButton {
+  width: 15vw;
+  height: 3.5vh;
 }
 
 .deck-filter {

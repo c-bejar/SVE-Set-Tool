@@ -299,6 +299,7 @@ const leaderContainer = document.querySelector(".leader");
 const mainContainer = document.querySelector(".main");
 const evolveContainer = document.querySelector(".evolve");
 const loadedCards = loadCards();
+let tokens = new Map();
 let cardSets = new Set();
 let universes = new Set();
 
@@ -307,6 +308,15 @@ let universes = new Set();
 copyButton.addEventListener("click", function (e) {
   navigator.clipboard.writeText(grabDeckText()).then(() => {
     console.log("Wrote to clipboard");
+  });
+});
+tokenButton.addEventListener("click", function (e) {
+  let clip = "0 ([_]) .\n";
+  tokens.forEach((token) => {
+    clip += `1 ([${token.name}]) ${token.url}\n`;
+  });
+  navigator.clipboard.writeText(clip).then(() => {
+    console.log("Wrote tokens to clipboard");
   });
 });
 document.querySelectorAll("select").forEach((select) => {
@@ -340,11 +350,15 @@ document.addEventListener("mousemove", function (e) {
 
 loadedCards.then((cards) => {
   cards.forEach((card) => {
-    cardSets.add(card.set);
-    universes.add(card.universe);
     if (card.type.includes("Token")) {
+      tokens.set(card.set_number, {
+        name: card.name,
+        url: card.image_url,
+      });
       return;
     }
+    cardSets.add(card.set);
+    universes.add(card.universe);
     const cardElement = createCard(card);
     cardContainer.appendChild(cardElement);
     cardElement.addEventListener("click", addCard);
