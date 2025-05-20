@@ -71,7 +71,7 @@ function addCard(data) {
       leaderCard.addEventListener("click", removeCard);
       break;
     case "main":
-      if (newCardData.type == "Leader") {
+      if (newCardData.type == "Leader" || newCardData.type.includes("Evolve")) {
         return;
       }
       const mainCard = createCard(newCardData, 1);
