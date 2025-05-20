@@ -162,6 +162,55 @@ function sortCards() {
   sortContainer(evolveContainer);
 }
 
+function updateDisplayedCards(filteredCards) {
+  Array.from(document.querySelectorAll(".card")).forEach((card) => {
+    if (filteredCards.includes(card)) {
+      card.style.display = "inline";
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
+
+function filterCards() {
+  const cardNameInput = document.querySelector('input[name="card-name"]');
+  const formatSelect = document.querySelector('select[name="Format"]');
+  const classSelect = document.querySelector('select[name="Class"]');
+  const universeSelect = document.querySelector("#universeContainer");
+  const setSelect = document.querySelector("#setContainer");
+  const costSelect = document.querySelector('select[name="Cost"]');
+  const typeSelect = document.querySelector('select[name="Card Type"]');
+  const keywordsInput = document.querySelector('input[name="keywords"]');
+
+  const allCards = Array.from(document.querySelectorAll(".card"));
+
+  let filteredCards = allCards.filter((card) => {
+    const cardInfo = JSON.parse(card.dataset.cardInfo);
+
+    if (
+      !cardInfo.name.toLowerCase().includes(cardNameInput.value.toLowerCase())
+    ) {
+      return false;
+    }
+
+    if (
+      !(
+        (formatSelect.value === "Gloryfinder" &&
+          cardInfo.format === "Gloryfinder") ||
+        (formatSelect.value === "Standard" &&
+          cardInfo.format !== "Gloryfinder") ||
+        formatSelect.value === "All"
+      )
+    ) {
+      return false;
+    }
+
+    return true;
+  });
+
+  updateDisplayedCards(filteredCards);
+}
+
 async function loadCards() {
   try {
     const response = await fetch("cards.json");
@@ -188,6 +237,12 @@ copyButton.addEventListener("click", function (e) {
   navigator.clipboard.writeText(grabDeckText()).then(() => {
     console.log("Wrote to clipboard");
   });
+});
+document.querySelectorAll("select").forEach((select) => {
+  select.addEventListener("change", filterCards);
+});
+document.querySelectorAll('input[type="textbox"]').forEach((input) => {
+  input.addEventListener("input", filterCards);
 });
 document.querySelectorAll('input[type="radio"]').forEach((radio) => {
   radio.addEventListener("click", handleRadioClick);
