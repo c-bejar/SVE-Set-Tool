@@ -14,7 +14,8 @@ img {
 label,
 select,
 option,
-input {
+input,
+button {
   font-family: "Vast Shadow", serif;
   font-weight: 400;
   font-style: normal;
@@ -79,6 +80,18 @@ input {
   height: 75vh;
   width: 48vw;
   overflow-y: auto;
+}
+
+.copy-deck {
+  position: absolute;
+  bottom: 24.5vh;
+  right: 40.5vw;
+  z-index: 1;
+}
+
+button {
+  width: 8vw;
+  height: 4vh;
 }
 
 .deck-filter {

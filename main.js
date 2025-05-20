@@ -69,6 +69,7 @@ function addCard(data) {
       const leaderCard = createCard(newCardData, 2);
       leaderContainer.appendChild(leaderCard);
       leaderCard.addEventListener("click", removeCard);
+      sortCards();
       break;
     case "main":
       if (newCardData.type == "Leader" || newCardData.type.includes("Evolve")) {
@@ -77,6 +78,7 @@ function addCard(data) {
       const mainCard = createCard(newCardData, 1);
       mainContainer.appendChild(mainCard);
       mainCard.addEventListener("click", removeCard);
+      sortCards();
       break;
     case "evolve":
       if (!newCardData.type.includes("Evolve")) {
@@ -85,6 +87,7 @@ function addCard(data) {
       const evolveCard = createCard(newCardData, 3);
       evolveContainer.appendChild(evolveCard);
       evolveCard.addEventListener("click", removeCard);
+      sortCards();
       break;
     default:
       return;
@@ -103,6 +106,60 @@ function getTotalCards(typeToReturn) {
     default:
       return 0;
   }
+}
+
+function grabDeckText() {
+  const cards = deckContainer.querySelectorAll("img");
+  let clipboard = "";
+  let uniqueCards = new Map();
+
+  cards.forEach((card) => {
+    const cardInfo = JSON.parse(card.dataset.cardInfo);
+    if (uniqueCards.has(cardInfo.set_number)) {
+      uniqueCards.set(cardInfo.set_number, {
+        ...uniqueCards.get(cardInfo.set_number),
+        count: uniqueCards.get(cardInfo.set_number).count + 1,
+      });
+    } else {
+      uniqueCards.set(cardInfo.set_number, {
+        name: cardInfo.name,
+        count: 1,
+        url: card.src,
+        type: cardInfo.type,
+      });
+    }
+  });
+
+  uniqueCards.forEach((data) => {
+    clipboard += `${data.count} ([${data.name}]) ${data.url}`;
+    if (data.type.includes("Evolve")) {
+      clipboard += " [!]";
+    }
+    clipboard += "\n";
+  });
+
+  return clipboard;
+}
+
+function sortCards() {
+  function sortContainer(container) {
+    Array.from(container.children)
+      .sort((a, b) => {
+        const dataA = JSON.parse(a.dataset.cardInfo);
+        const dataB = JSON.parse(b.dataset.cardInfo);
+        const typeComparison = dataA.type.localeCompare(dataB.type);
+        if (typeComparison == 0) {
+          return dataA.name.localeCompare(dataB.name);
+        }
+
+        return typeComparison;
+      })
+      .forEach((child) => {
+        container.appendChild(child);
+      });
+  }
+  sortContainer(mainContainer);
+  sortContainer(evolveContainer);
 }
 
 async function loadCards() {
@@ -125,10 +182,17 @@ const loadedCards = loadCards();
 let cardSets = new Set();
 let universes = new Set();
 
+//------------------------------------------------------------------------
+
+copyButton.addEventListener("click", function (e) {
+  navigator.clipboard.writeText(grabDeckText()).then(() => {
+    console.log("Wrote to clipboard");
+  });
+});
 document.querySelectorAll('input[type="radio"]').forEach((radio) => {
   radio.addEventListener("click", handleRadioClick);
 });
-document.addEventListener("mouseover", function (e) {
+document.addEventListener("mousemove", function (e) {
   const element = document.elementFromPoint(e.clientX, e.clientY);
   if (element.className == "card") {
     const image = cardPreviewR.querySelector("img");
