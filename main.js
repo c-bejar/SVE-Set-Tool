@@ -174,13 +174,15 @@ function updateDisplayedCards(filteredCards) {
 
 function filterCards() {
   const cardNameInput = document.querySelector('input[name="card-name"]');
-  const formatSelect = document.querySelector('select[name="Format"]');
+  const keywordsInput = document.querySelector('input[name="keywords"]');
   const classSelect = document.querySelector('select[name="Class"]');
+  const typeSelect = document.querySelector('select[name="Card Type"]');
+  const formatSelect = document.querySelector('select[name="Format"]');
+  const costSelect = document.querySelector('select[name="Cost"]');
+  const atkSelect = document.querySelector('select[name="Attack"]');
+  const defSelect = document.querySelector('select[name="Defense"]');
   const universeSelect = document.querySelector("#universeContainer");
   const setSelect = document.querySelector("#setContainer");
-  const costSelect = document.querySelector('select[name="Cost"]');
-  const typeSelect = document.querySelector('select[name="Card Type"]');
-  const keywordsInput = document.querySelector('input[name="keywords"]');
 
   const allCards = Array.from(document.querySelectorAll(".card"));
 
@@ -194,6 +196,30 @@ function filterCards() {
     }
 
     if (
+      !cardInfo.ability
+        .toLowerCase()
+        .includes(keywordsInput.value.toLowerCase())
+    ) {
+      return false;
+    }
+
+    if (
+      !(classSelect.value === cardInfo.class || classSelect.value === "All")
+    ) {
+      return false;
+    }
+
+    if (
+      !(
+        typeSelect.value === cardInfo.type ||
+        (typeSelect.value === "Evolved" && cardInfo.type.includes("Evolve")) ||
+        typeSelect.value === "All"
+      )
+    ) {
+      return false;
+    }
+
+    if (
       !(
         (formatSelect.value === "Gloryfinder" &&
           cardInfo.format === "Gloryfinder") ||
@@ -201,6 +227,51 @@ function filterCards() {
           cardInfo.format !== "Gloryfinder") ||
         formatSelect.value === "All"
       )
+    ) {
+      return false;
+    }
+
+    if (
+      !(
+        cardInfo.cost.includes(costSelect.value) ||
+        (costSelect.value === "8+" && parseInt(cardInfo.cost) >= 8) ||
+        costSelect.value === "All"
+      )
+    ) {
+      return false;
+    }
+
+    if (
+      !(
+        cardInfo.attack === atkSelect.value ||
+        (atkSelect.value === "10+" && cardInfo.attack >= 10) ||
+        atkSelect.value === "Any"
+      )
+    ) {
+      return false;
+    }
+
+    if (
+      !(
+        cardInfo.defense === defSelect.value ||
+        (defSelect.value === "10+" && cardInfo.defense >= 10) ||
+        defSelect.value === "Any"
+      )
+    ) {
+      return false;
+    }
+
+    if (
+      !(
+        universeSelect.value === cardInfo.universe ||
+        universeSelect.value === "Unspecified"
+      )
+    ) {
+      return false;
+    }
+
+    if (
+      !(setSelect.value === cardInfo.set || setSelect.value === "Unspecified")
     ) {
       return false;
     }
