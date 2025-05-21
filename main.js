@@ -1,5 +1,3 @@
-import { inject } from "@vercel/analytics";
-
 function createCard(cardData, toDeck = 0) {
   const cardElement = document.createElement("img");
   cardElement.src = cardData.image_url;
@@ -306,8 +304,6 @@ let cardSets = new Set();
 let universes = new Set();
 
 //------------------------------------------------------------------------
-
-inject();
 
 copyButton.addEventListener("click", function (e) {
   navigator.clipboard.writeText(grabDeckText()).then(() => {
