@@ -55,13 +55,23 @@ function removeCard(data) {
 }
 
 function addCard(data) {
-  const currentView = document.querySelector('input[name="deck"]:checked');
   const newCardData = JSON.parse(data.srcElement.dataset.cardInfo);
+
+  if (newCardData.type === "Leader") {
+    const leaderInput = document.querySelector('input[id="leader"]');
+    leaderInput.click();
+  } else if (newCardData.type.includes("Evolve")) {
+    const evolveInput = document.querySelector('input[id="evolve"]');
+    evolveInput.click();
+  } else {
+    const mainInput = document.querySelector('input[id="main"]');
+    mainInput.click();
+  }
+
+  const currentView = document.querySelector('input[name="deck"]:checked');
   switch (currentView.id) {
     case "leader":
-      if (newCardData.type != "Leader") {
-        return;
-      }
+      // Limits total to 1 card
       while (leaderContainer.firstChild) {
         cardCount.textContent--;
         leaderContainer.removeChild(leaderContainer.firstChild);
@@ -72,7 +82,8 @@ function addCard(data) {
       sortCards();
       break;
     case "main":
-      if (newCardData.type == "Leader" || newCardData.type.includes("Evolve")) {
+      // limit to 51 (50 + glory card)
+      if (mainContainer.children.length >= 51) {
         return;
       }
       const mainCard = createCard(newCardData, 1);
@@ -81,7 +92,7 @@ function addCard(data) {
       sortCards();
       break;
     case "evolve":
-      if (!newCardData.type.includes("Evolve")) {
+      if (evolveContainer.children.length >= 20) {
         return;
       }
       const evolveCard = createCard(newCardData, 3);
