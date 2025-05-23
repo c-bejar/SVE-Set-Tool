@@ -1,26 +1,40 @@
 function createCard(cardData, toDeck = 0) {
   const cardElement = document.createElement("img");
+
   cardElement.onload = function () {
-    this.src = cardData.image_url;
+    loadImageWhenVisible(cardElement);
+
+    if (toDeck == 1) {
+      cardElement.className = "deck-card";
+    } else if (toDeck == 2) {
+      cardElement.className = "leader-card";
+    } else if (toDeck == 3) {
+      cardElement.className = "evolve-card";
+    } else {
+      cardElement.className = "card";
+    }
+    cardElement.loading = "lazy";
+    cardElement.draggable = false;
+    cardElement.dataset.cardInfo = JSON.stringify(cardData);
   };
 
   cardElement.src = "assets/card_back.png";
+  cardElement.dataset.src = cardData.image_url;
   cardElement.alt = cardData.name;
 
-  if (toDeck == 1) {
-    cardElement.className = "deck-card";
-  } else if (toDeck == 2) {
-    cardElement.className = "leader-card";
-  } else if (toDeck == 3) {
-    cardElement.className = "evolve-card";
-  } else {
-    cardElement.className = "card";
-  }
-  cardElement.loading = "lazy";
-  cardElement.draggable = false;
-  cardElement.dataset.cardInfo = JSON.stringify(cardData);
-
   return cardElement;
+}
+
+function loadImageWhenVisible(img) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        img.src = img.dataset.src;
+        observer.unobserve(entry.target);
+      }
+    });
+  });
+  observer.observe(img);
 }
 
 function createOption(optionName) {
@@ -73,18 +87,17 @@ function addCard(data) {
     mainInput.click();
   }
 
+  cardCount.textContent++;
   const currentView = document.querySelector('input[name="deck"]:checked');
   switch (currentView.id) {
     case "leader":
       // Limits total to 1 card
       while (leaderContainer.firstChild) {
-        cardCount.textContent--;
         leaderContainer.removeChild(leaderContainer.firstChild);
       }
       const leaderCard = createCard(newCardData, 2);
       leaderContainer.appendChild(leaderCard);
       leaderCard.addEventListener("click", removeCard);
-      sortCards();
       break;
     case "main":
       // limit to 51 (50 + glory card)
@@ -108,7 +121,6 @@ function addCard(data) {
     default:
       return;
   }
-  cardCount.textContent++;
 }
 
 function getTotalCards(typeToReturn) {
