@@ -1,18 +1,18 @@
 function createCard(cardData, toDeck = 0) {
   const cardElement = document.createElement("img");
+  if (toDeck == 1) {
+    cardElement.className = "deck-card";
+  } else if (toDeck == 2) {
+    cardElement.className = "leader-card";
+  } else if (toDeck == 3) {
+    cardElement.className = "evolve-card";
+  } else {
+    cardElement.className = "card";
+  }
 
   cardElement.onload = function () {
     loadImageWhenVisible(cardElement);
 
-    if (toDeck == 1) {
-      cardElement.className = "deck-card";
-    } else if (toDeck == 2) {
-      cardElement.className = "leader-card";
-    } else if (toDeck == 3) {
-      cardElement.className = "evolve-card";
-    } else {
-      cardElement.className = "card";
-    }
     cardElement.loading = "lazy";
     cardElement.draggable = false;
     cardElement.dataset.cardInfo = JSON.stringify(cardData);
@@ -336,17 +336,20 @@ let universes = new Set();
 copyButton.addEventListener("click", function (e) {
   const text = grabDeckText();
 
+  // Used for Tabletop Simulator Tablet; navigator unsupported
   const textArea = document.createElement("textarea");
   textArea.value = text;
   document.body.appendChild(textArea);
   textArea.focus();
   textArea.select();
-  try {
-    document.execCommand("copy");
-  } catch (fallbackErr) {
-    console.error("Error: ", fallbackErr);
-  }
+  const success = document.execCommand("copy");
   document.body.removeChild(textArea);
+
+  if (!success) {
+    navigator.clipboard.writeText(text).then(() => {
+      console.log("Used navigator to write to clipboard!");
+    });
+  }
 });
 tokenButton.addEventListener("click", function (e) {
   let clip = "0 ([_]) .\n";
