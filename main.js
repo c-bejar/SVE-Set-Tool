@@ -346,13 +346,16 @@ document.querySelectorAll('input[type="radio"]').forEach((radio) => {
 });
 document.addEventListener("mousemove", function (e) {
   const element = document.elementFromPoint(e.clientX, e.clientY);
-  if (element.className == "card") {
+  if (element.className == "card" && element.complete) {
     const image = cardPreviewR.querySelector("img");
     image.src = element.src;
     image.className = "preview";
     cardPreviewR.style.visibility = "visible";
     cardPreviewL.style.visibility = "hidden";
-  } else if (["deck-card", "evolve-card"].includes(element.className)) {
+  } else if (
+    ["deck-card", "evolve-card"].includes(element.className) &&
+    element.complete
+  ) {
     const image = cardPreviewL.querySelector("img");
     image.src = element.src;
     image.className = "preview";
