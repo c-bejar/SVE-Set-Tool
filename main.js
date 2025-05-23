@@ -1,7 +1,12 @@
 function createCard(cardData, toDeck = 0) {
   const cardElement = document.createElement("img");
-  cardElement.src = cardData.image_url;
+  cardElement.onload = function () {
+    this.src = cardData.image_url;
+  };
+
+  cardElement.src = "assets/card_back.png";
   cardElement.alt = cardData.name;
+
   if (toDeck == 1) {
     cardElement.className = "deck-card";
   } else if (toDeck == 2) {
