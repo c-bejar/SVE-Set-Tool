@@ -60,7 +60,7 @@ function removeCard(data) {
 }
 
 function addCard(data) {
-  const newCardData = JSON.parse(data.srcElement.dataset.cardInfo);
+  const newCardData = JSON.parse(data.dataset.cardInfo);
 
   if (newCardData.type === "Leader") {
     const leaderInput = document.querySelector('input[id="leader"]');
@@ -380,7 +380,9 @@ loadedCards.then((cards) => {
     universes.add(card.universe);
     const cardElement = createCard(card);
     cardContainer.appendChild(cardElement);
-    cardElement.addEventListener("click", addCard);
+    cardElement.addEventListener("click", function () {
+      if (cardElement.complete) addCard(cardElement);
+    });
   });
   universes.forEach((universe) => {
     if (universe == "") {
