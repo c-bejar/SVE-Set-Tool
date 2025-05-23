@@ -369,6 +369,9 @@ document.addEventListener("mousemove", function (e) {
 
 loadedCards.then((cards) => {
   cards.forEach((card) => {
+    if (card.type.includes("Evolution")) {
+      return;
+    }
     if (card.type.includes("Token")) {
       tokens.set(card.set_number, {
         name: card.name,
