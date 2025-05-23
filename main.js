@@ -244,7 +244,7 @@ function filterCards() {
 
     if (
       !(
-        cardInfo.cost.includes(costSelect.value) ||
+        cardInfo.cost === costSelect.value ||
         (costSelect.value === "8+" && parseInt(cardInfo.cost) >= 8) ||
         costSelect.value === "All"
       )
