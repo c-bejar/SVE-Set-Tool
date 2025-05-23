@@ -334,8 +334,9 @@ let universes = new Set();
 //------------------------------------------------------------------------
 
 copyButton.addEventListener("click", function (e) {
-  navigator.clipboard.writeText(grabDeckText()).then(() => {
-    console.log("Wrote to clipboard");
+  const text = grabDeckText();
+  navigator.clipboard.writeText(text).then(() => {
+    alert("Wrote to clipboard.");
   });
 });
 tokenButton.addEventListener("click", function (e) {
