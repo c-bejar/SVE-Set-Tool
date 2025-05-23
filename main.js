@@ -335,25 +335,18 @@ let universes = new Set();
 
 copyButton.addEventListener("click", function (e) {
   const text = grabDeckText();
-  try {
-    navigator.clipboard.writeText(text).then(() => {
-      console.log("Wrote to clipboard");
-    });
-  } catch (err) {
-    console.error("Error: ", err);
 
-    const textArea = document.createElement("textarea");
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    try {
-      document.execCommand("copy");
-    } catch (fallbackErr) {
-      console.error("Error: ", fallbackErr);
-    }
-    document.body.removeChild(textArea);
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+  try {
+    document.execCommand("copy");
+  } catch (fallbackErr) {
+    console.error("Error: ", fallbackErr);
   }
+  document.body.removeChild(textArea);
 });
 tokenButton.addEventListener("click", function (e) {
   let clip = "0 ([_]) .\n";
