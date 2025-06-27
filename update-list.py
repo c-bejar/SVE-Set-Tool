@@ -45,7 +45,7 @@ def main():
                 "class": card_info['class'],
                 "universe": card_info['universe'],
                 "type": types[i].find('span').text,
-                "set": card_info['set'],
+                "set": card_info['set'][:-1],
                 "cost": costs[i].text[4:],
                 "attack": powers[i].text[6:],
                 "defense": hps[i].text[7:],
