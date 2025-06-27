@@ -69,6 +69,7 @@ def main():
         url = BASE_URL + FILTER + str(current_page)
         response = requests.get(url)
     
+    card_list.reverse()
     for data in card_list:
         if data not in old_cards:
             old_cards.insert(0, data)
